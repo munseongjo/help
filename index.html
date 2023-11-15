@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .finish {
+      position: absolute;
+      top: 571px;
+      left: 960px;
+      width: 50px;
+      height: 50px;
+      background: url('path/to/goal.gif') no-repeat center/contain; /* Goal Image */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+    }
+
+    .playersContainer {
+      position: relative;
+      width: 1000px;
+      height: 600px;
+      border: 1px solid #000;
+      overflow: hidden;
+      margin-top: 20px;
+      background: url('path/to/background.jpg') no-repeat center/cover; /* Background Image */
+    }
+
+    .player {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: url('path/to/player.gif') no-repeat center/contain; /* Player Image */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .playerName {
+      position: absolute;
+      width: 50px;
+      text-align: center;
+    }
+
+    #playerNameInput {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="finish"></div>
+  <div class="playersContainer"></div>
+  <input type="text" id="playerNameInput" placeholder="플레이어 이름" onkeydown="handleEnterKey(event)">
+  <button onclick="addPlayer()">Add Player</button>
+  <button onclick="startRace()">Start Race</button>
+
+  <script>
+    const playersContainer = document.querySelector('.playersContainer');
+    const finish = document.querySelector('.finish');
+    const playerNameInput = document.getElementById('playerNameInput');
+    let isRaceStarted = false;
+    let raceInterval;
+    const allPlayers = [];
+
+    class Player {
+      constructor(name) {
+        this.name = name;
+        this.element = document.createElement('div');
+        this.element.className = 'player';
+        this.element.textContent = this.name;
+
+        this.nameElement = document.createElement('div');
+        this.nameElement.className = 'playerName';
+        this.nameElement.textContent = this.name;
+
+        playersContainer.appendChild(this.element);
+        playersContainer.appendChild(this.nameElement);
+
+        this.resetPosition();
+      }
+
+      resetPosition() {
+        let isOverlapping = true;
+        let newX, newY;
+
+        while (isOverlapping) {
+          newX = Math.floor(Math.random() * 200);
+          newY = allPlayers.length * 70;
+
+          isOverlapping = allPlayers.some(player => {
+            const rect1 = this.element.getBoundingClientRect();
+            const rect2 = player.element.getBoundingClientRect();
+
+            return (
+              rect1.left < rect2.right &&
+              rect1.right > rect2.left &&
+              rect1.top < rect2.bottom &&
+              rect1.bottom > rect2.top
+            );
+          });
+        }
+
+        this.element.style.left = `${newX}px`;
+        this.element.style.top = `${newY}px`;
+
+        this.nameElement.style.left = `${newX}px`;
+        this.nameElement.style.top = `${newY}px`;
+      }
+
+      move() {
+        if (isRaceStarted) {
+          const moveX = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 60 - 20);
+          const moveY = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 60 - 20);
+
+          let newX = parseFloat(this.element.style.left) + moveX;
+          let newY = parseFloat(this.element.style.top) + moveY;
+
+          newX = Math.min(Math.max(newX, 0), playersContainer.clientWidth - 50);
+          newY = Math.min(Math.max(newY, 0), playersContainer.clientHeight - 50);
+
+          this.element.style.left = `${newX}px`;
+          this.element.style.top = `${newY}px`;
+
+          this.nameElement.style.left = this.element.style.left;
+          this.nameElement.style.top = this.element.style.top;
+
+          const finishRect = finish.getBoundingClientRect();
+          const playerRect = this.element.getBoundingClientRect();
+
+          const distance = Math.sqrt(
+            Math.pow(playerRect.left - finishRect.left, 2) +
+            Math.pow(playerRect.top - finishRect.top, 2)
+          );
+
+          if (distance < 30) {
+            console.log(`${this.name}이(가) 승리했습니다!`);
+            isRaceStarted = false;
+            clearInterval(raceInterval);
+          }
+        }
+      }
+    }
+
+    function addPlayer() {
+      if (!isRaceStarted) {
+        const playerName = playerNameInput.value;
+        if (playerName) {
+          const newPlayer = new Player(playerName);
+          allPlayers.push(newPlayer);
+          playerNameInput.value = '';
+        }
+      }
+    }
+
+    function handleEnterKey(event) {
+      if (event.key === 'Enter') {
+        addPlayer();
+      }
+    }
+
+    function startRace() {
+      isRaceStarted = true;
+      raceInterval = setInterval(() => {
+        allPlayers.forEach(player => {
+          player.move();
+        });
+      }, 100);
+    }
+  </script>
+</body>
+
+</html>
