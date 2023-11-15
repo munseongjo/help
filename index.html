@@ -5,6 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    .playersContainer {
+      position: relative;
+      width: 1000px;
+      height: 600px;
+      border: 1px solid #000;
+      overflow: hidden;
+      margin-top: 20px;
+      background: url('path/to/background.jpg') no-repeat center/cover; /* Background Image */
+    }
+
     .finish {
       position: absolute;
       top: 571px;
@@ -17,16 +27,7 @@
       justify-content: center;
       font-weight: bold;
       color: white;
-    }
-
-    .playersContainer {
-      position: relative;
-      width: 1000px;
-      height: 600px;
-      border: 1px solid #000;
-      overflow: hidden;
-      margin-top: 20px;
-      background: url('path/to/background.jpg') no-repeat center/cover; /* Background Image */
+      z-index: 1; /* Set a higher z-index to make it appear above the background */
     }
 
     .player {
@@ -45,6 +46,7 @@
       position: absolute;
       width: 50px;
       text-align: center;
+      color: black; /* Set the text color to black */
     }
 
     #playerNameInput {
@@ -75,12 +77,21 @@
         this.element.className = 'player';
         this.element.textContent = this.name;
 
+        // Style the player element
+        this.element.style.color = 'white';
+        this.element.style.fontWeight = 'bold';
+
+        // Create a separate div for the player name
         this.nameElement = document.createElement('div');
         this.nameElement.className = 'playerName';
         this.nameElement.textContent = this.name;
 
-        playersContainer.appendChild(this.element);
-        playersContainer.appendChild(this.nameElement);
+        // Style the player name element
+        this.nameElement.style.position = 'absolute';
+        this.nameElement.style.width = '50px';
+        this.nameElement.style.textAlign = 'center';
+        this.nameElement.style.color = 'black'; // Set the text color to black
+        this.nameElement.style.left = '30px'; // Move the name 30px to the right
 
         this.resetPosition();
       }
@@ -109,14 +120,17 @@
         this.element.style.left = `${newX}px`;
         this.element.style.top = `${newY}px`;
 
-        this.nameElement.style.left = `${newX}px`;
+        this.nameElement.style.left = `${newX + 30}px`; // Adjust the name position accordingly
         this.nameElement.style.top = `${newY}px`;
+
+        // Append only the player element to the playersContainer
+        playersContainer.appendChild(this.element);
       }
 
       move() {
         if (isRaceStarted) {
-          const moveX = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 60 - 20);
-          const moveY = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 60 - 20);
+          const moveX = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 45 - 20);
+          const moveY = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 45 - 20);
 
           let newX = parseFloat(this.element.style.left) + moveX;
           let newY = parseFloat(this.element.style.top) + moveY;
@@ -127,8 +141,8 @@
           this.element.style.left = `${newX}px`;
           this.element.style.top = `${newY}px`;
 
-          this.nameElement.style.left = this.element.style.left;
-          this.nameElement.style.top = this.element.style.top;
+          this.nameElement.style.left = `${newX + 30}px`; // Adjust the name position accordingly
+          this.nameElement.style.top = `${newY}px`;
 
           const finishRect = finish.getBoundingClientRect();
           const playerRect = this.element.getBoundingClientRect();
@@ -139,7 +153,7 @@
           );
 
           if (distance < 30) {
-            console.log(`${this.name}이(가) 승리했습니다!`);
+            alert(`${this.name}이(가) 승리했습니다!`);
             isRaceStarted = false;
             clearInterval(raceInterval);
           }
@@ -150,7 +164,7 @@
     function addPlayer() {
       if (!isRaceStarted) {
         const playerName = playerNameInput.value;
-        if (playerName) {
+        if (playerName && !allPlayers.some(player => player.name === playerName)) {
           const newPlayer = new Player(playerName);
           allPlayers.push(newPlayer);
           playerNameInput.value = '';
