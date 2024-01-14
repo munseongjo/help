@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>랜덤리액션</title>
+  <title>슬롯머신</title>
   <style>
 
     body {
@@ -137,7 +137,13 @@
   return Math.random() * (6 - minSpeed) + 1;
 }
 
-
+// 각 이미지에 해당하는 오디오 파일을 정의하는 배열
+const audioFiles = [
+  '1.mp3', '2.mp3', '3.mp3', '4.mp3', '5.mp3', '6.mp3',
+  '7.mp3', '8.mp3', '9.mp3', '10.mp3', '11.mp3', '12.mp3',
+  '13.mp3', '14.mp3', '15.mp3', '16.mp3', '17.mp3', '18.mp3',
+  '19.mp3', '20.mp3', '21.mp3', '22.mp3', '23.mp3', '24.mp3', '25.mp3', '26.mp3'
+];
 
     function startSpin() {
       if (!isSpinning) {
@@ -247,7 +253,13 @@ function startAuto() {
               startButton.disabled = false; // 모든 릴이 정지된 후에 시작 버튼 다시 활성화
             }
           };
-
+      // 해당 이미지의 인덱스에 기반하여 오디오 파일 재생
+      const audioIndex = positionIndex - 1;
+      if (audioIndex >= 0 && audioIndex < audioFiles.length) {
+        const audioFile = audioFiles[audioIndex];
+        playAudio(audioFile);
+      
+    };
             newImage.onerror = function () {
               // Image loading failed
               console.error('이미지 로드에 실패했습니다.');
@@ -260,6 +272,19 @@ function startAuto() {
         });
       }
     }
+
+function playAudio(audioFile) {
+  // 새로운 오디오 요소 생성
+  const audio = new Audio(audioFile);
+
+  // 오디오 재생
+  audio.play();
+
+  // 선택 사항: 재생이 끝난 후 오디오 요소 제거를 위한 이벤트 리스너 추가
+  audio.addEventListener('ended', function () {
+    audio.remove();
+  });
+}
   </script>
 </body>
 </html>
