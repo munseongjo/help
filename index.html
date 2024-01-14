@@ -12,35 +12,34 @@
   }
 
     @keyframes spin {
-      0% { transform: translateY(0px); }
-      3.84% { transform: translateY(-163px); }
-      7.69% { transform: translateY(-326px); }
-      11.52% { transform: translateY(-489px); }
-      15.36% { transform: translateY(-652px); }
-      19.20% { transform: translateY(-815px); }
-      23.04% { transform: translateY(-978px); }
-      26.88% { transform: translateY(-1141px); }
-      30.72% { transform: translateY(-1304px); }  
-      34.56% { transform: translateY(-1467px); }
-      38.40% { transform: translateY(-1630px); }
-      42.24% { transform: translateY(-1793px); }
-      46.08% { transform: translateY(-1956px); } 
-      49.92% { transform: translateY(-2119px); } 
-      53.76% { transform: translateY(-2282px); } 
-      57.60% { transform: translateY(-2445px); } 
-      61.44% { transform: translateY(-2608px); } 
-      65.28% { transform: translateY(-2771px); } 
-      69.12% { transform: translateY(-2934px); } 
-      72.96% { transform: translateY(-3097px); } 
-      76.80% { transform: translateY(-3260px); } 
-      80.64% { transform: translateY(-3423px); } 
-      84.48% { transform: translateY(-3586px); } 
-      88.32% { transform: translateY(-3749px); } 
-      92.16% { transform: translateY(-3912px); } 
-      96.12% { transform: translateY(-4075px); } 
-      100% { transform: translateY(-4238px); } 
-    }
-
+  0% { transform: translateY(0px); }
+  3.846% { transform: translateY(-163px); }
+  7.692% { transform: translateY(-326px); }
+  11.538% { transform: translateY(-489px); }
+  15.384% { transform: translateY(-652px); }
+  19.23% { transform: translateY(-815px); }
+  22.996% { transform: translateY(-978px); }
+  26.922% { transform: translateY(-1141px); }
+  30.768% { transform: translateY(-1304px); }  
+  34.614% { transform: translateY(-1467px); }
+  38.46% { transform: translateY(-1630px); }
+  42.306% { transform: translateY(-1793px); }
+  46.152% { transform: translateY(-1956px); } 
+  50% { transform: translateY(-2119px); } 
+  53.846% { transform: translateY(-2282px); } 
+  57.692% { transform: translateY(-2445px); } 
+  61.538% { transform: translateY(-2608px); } 
+  65.384% { transform: translateY(-2771px); } 
+  69.23% { transform: translateY(-2934px); } 
+  73.076% { transform: translateY(-3097px); } 
+  76.922% { transform: translateY(-3260px); } 
+  80.768% { transform: translateY(-3423px); } 
+  84.614% { transform: translateY(-3586px); } 
+  88.46% { transform: translateY(-3749px); } 
+  92.306% { transform: translateY(-3912px); } 
+  96.152% { transform: translateY(-4075px); } 
+  100% { transform: translateY(-4238px); } 
+}
     .slot {
       background-color: white; /* 슬롯 배경을 흰색으로 설정 */
       width: 292px;
@@ -162,10 +161,10 @@ const audioFiles = [
           });
 
           // Add an additional image to each reel
-    //      const additionalImg = document.createElement('img');
-    //      additionalImg.src = '1.png';
-    //      additionalImg.alt = '1';
-    //      reel.appendChild(additionalImg);
+          const additionalImg = document.createElement('img');
+          additionalImg.src = '1.png';
+          additionalImg.alt = '1';
+          reel.appendChild(additionalImg);
 
           // Initialize
           reel.innerHTML = reel.innerHTML;
