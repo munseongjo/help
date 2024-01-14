@@ -1,192 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>슬롯머신</title>
   <style>
-    .playersContainer {
-      position: relative;
-      width: 1000px;
-      height: 600px;
-      border: 1px solid #000;
+
+    body {
+    background-color: transparent; /* HTML 배경을 투명하게 설정 */
+   margin: 0; /* Body의 기본 마진 제거 */
+  }
+
+    @keyframes spin {
+      0% { transform: translateY(0px); }
+      3.84% { transform: translateY(-163px); }
+      7.69% { transform: translateY(-326px); }
+      11.52% { transform: translateY(-489px); }
+      15.36% { transform: translateY(-652px); }
+      19.20% { transform: translateY(-815px); }
+      23.04% { transform: translateY(-978px); }
+      26.88% { transform: translateY(-1141px); }
+      30.72% { transform: translateY(-1304px); }  
+      34.56% { transform: translateY(-1467px); }
+      38.40% { transform: translateY(-1630px); }
+      42.24% { transform: translateY(-1793px); }
+      46.08% { transform: translateY(-1956px); } 
+      49.92% { transform: translateY(-2119px); } 
+      53.76% { transform: translateY(-2282px); } 
+      57.60% { transform: translateY(-2445px); } 
+      61.44% { transform: translateY(-2608px); } 
+      65.28% { transform: translateY(-2771px); } 
+      69.12% { transform: translateY(-2934px); } 
+      72.96% { transform: translateY(-3097px); } 
+      76.80% { transform: translateY(-3260px); } 
+      80.64% { transform: translateY(-3423px); } 
+      84.48% { transform: translateY(-3586px); } 
+      88.32% { transform: translateY(-3749px); } 
+      92.16% { transform: translateY(-3912px); } 
+      96.12% { transform: translateY(-4075px); } 
+      100% { transform: translateY(-4238px); } 
+    }
+
+    .slot {
+      background-color: white; /* 슬롯 배경을 흰색으로 설정 */
+      width: 292px;
+      height: 163px;
       overflow: hidden;
-      margin-top: 20px;
-      background: url('path/to/background.jpg') no-repeat center/cover; /* Background Image */
+      border: 1px solid #ccc;
+      position: relative;
+      margin: 0 auto;
+      border-radius: 25px; /* 이미지를 라운드한 네모모양으로 표시하기 */
     }
 
-    .finish {
+    .reel-container {
+      height: 163px;
+      overflow: hidden;
       position: absolute;
-      top: 571px;
-      left: 960px;
-      width: 50px;
-      height: 50px;
-      background: url('path/to/goal.gif') no-repeat center/contain; /* Goal Image */
+      bottom: 0;
+    }
+
+    .reel {
+      width: 100%;
+      height: 100%;
+      transform: translateY(0);
+    }
+
+    .reel img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .start-button,
+    .stop-button, 
+    .auto-button{
+
+      margin-top: 8px;
+      padding: 0px 17px;
+      width: 152px;
+      height: 35px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .slots-container {
+      width: 300px;
+      height: 200px;
+      flex-direction: column
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: white;
-      z-index: 1; /* Set a higher z-index to make it appear above the background */
+      justify-content: space-around;
+      margin-top: 5px;
     }
-
-    .player {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background: url('path/to/player.gif') no-repeat center/contain; /* Player Image */
+	.button-container {
+      width: 292px;
+      height: 100px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-    }
+      justify-content: space-around;
+      margin-top: 5px;
 
-    .playerName {
-      position: absolute;
-      width: 50px;
-      text-align: center;
-      color: black; /* Set the text color to black */
-    }
-
-    #playerNameInput {
-      margin-right: 10px;
-    }
   </style>
 </head>
-
 <body>
-  <div class="finish"></div>
-  <div class="playersContainer"></div>
-  <input type="text" id="playerNameInput" placeholder="플레이어 이름" onkeydown="handleEnterKey(event)">
-  <button onclick="addPlayer()">Add Player</button>
-  <button onclick="startRace()">Start Race</button>
 
-  <script>
-    const playersContainer = document.querySelector('.playersContainer');
-    const finish = document.querySelector('.finish');
-    const playerNameInput = document.getElementById('playerNameInput');
-    let isRaceStarted = false;
-    let raceInterval;
-    const allPlayers = [];
+  <div class="slots-container">
+    <div class="slot" id="reel1">
+      <div class="reel-container">
+        <div class="reel" id="reel1">
+          <img src="0.png" alt="0">
+        </div>
+      </div>
+    </div>
 
-    class Player {
-      constructor(name) {
-        this.name = name;
-        this.element = document.createElement('div');
-        this.element.className = 'player';
-        this.element.textContent = this.name;
+   
 
-        // Style the player element
-        this.element.style.color = 'white';
-        this.element.style.fontWeight = 'bold';
+ <!-- 시작 및 정지 버튼 및 효과음 추가 -->
+<div class="button-container">
+      <button class="auto-button" onclick="startAuto()('reel1')">자동</button>
+  </div>
+   <div> <audio id="spinSound" src="spin_sound.mp3"></audio>
+  </div>
 
-        // Create a separate div for the player name
-        this.nameElement = document.createElement('div');
-        this.nameElement.className = 'playerName';
-        this.nameElement.textContent = this.name;
+ <script>
+    let isSpinning = false;
+    let spinCount = 0; // 정지 호출 횟수
+    const reels = document.querySelectorAll('.reel');
+	const spinSound = document.getElementById('spinSound');
+    const images = [];
 
-        // Style the player name element
-        this.nameElement.style.position = 'absolute';
-        this.nameElement.style.width = '50px';
-        this.nameElement.style.textAlign = 'center';
-        this.nameElement.style.color = 'black'; // Set the text color to black
-        this.nameElement.style.left = '30px'; // Move the name 30px to the right
+    // 이미지 추가
+    for (let i = 1; i <= 26; i++) {
+      images.push(`${i}.png`);
+    }
 
-        this.resetPosition();
-      }
+	 function randomSpeed() {
+  const minSpeed = 4; // 최소값
+  return Math.random() * (6 - minSpeed) + 1;
+}
 
-      resetPosition() {
-        let isOverlapping = true;
-        let newX, newY;
 
-        while (isOverlapping) {
-          newX = Math.floor(Math.random() * 200);
-          newY = allPlayers.length * 70;
 
-          isOverlapping = allPlayers.some(player => {
-            const rect1 = this.element.getBoundingClientRect();
-            const rect2 = player.element.getBoundingClientRect();
+    function startSpin() {
+      if (!isSpinning) {
+        spinCount = 0; // 새로운 스핀 시작 시 카운터 초기화
+        spinSound.play();
+        reels.forEach((reel, index) => {
+          // Clear the content of each reel
+          reel.innerHTML = '';
 
-            return (
-              rect1.left < rect2.right &&
-              rect1.right > rect2.left &&
-              rect1.top < rect2.bottom &&
-              rect1.bottom > rect2.top
-            );
+          // Add images to each reel
+          images.forEach(imgSrc => {
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = imgSrc;
+            reel.appendChild(img);
           });
-        }
 
-        this.element.style.left = `${newX}px`;
-        this.element.style.top = `${newY}px`;
+          // Add an additional image to each reel
+          const additionalImg = document.createElement('img');
+          additionalImg.src = '1.png';
+          additionalImg.alt = '1';
+          reel.appendChild(additionalImg);
 
-        this.nameElement.style.left = `${newX + 30}px`; // Adjust the name position accordingly
-        this.nameElement.style.top = `${newY}px`;
+          // Initialize
+          reel.innerHTML = reel.innerHTML;
 
-        // Append only the player element to the playersContainer
-        playersContainer.appendChild(this.element);
-      }
+          // Reset animation for each reel
+          reel.style.animation = 'none';
+          void reel.offsetWidth; // Trigger reflow
+          reel.style.animation = `spin ${randomSpeed()}s infinite linear`; // Use random speed
 
-      move() {
-        if (isRaceStarted) {
-          const moveX = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 45 - 20);
-          const moveY = (Math.random() < 0.8 ? 1 : -1) * (Math.random() * 45 - 20);
-
-          let newX = parseFloat(this.element.style.left) + moveX;
-          let newY = parseFloat(this.element.style.top) + moveY;
-
-          newX = Math.min(Math.max(newX, 0), playersContainer.clientWidth - 50);
-          newY = Math.min(Math.max(newY, 0), playersContainer.clientHeight - 50);
-
-          this.element.style.left = `${newX}px`;
-          this.element.style.top = `${newY}px`;
-
-          this.nameElement.style.left = `${newX + 30}px`; // Adjust the name position accordingly
-          this.nameElement.style.top = `${newY}px`;
-
-          const finishRect = finish.getBoundingClientRect();
-          const playerRect = this.element.getBoundingClientRect();
-
-          const distance = Math.sqrt(
-            Math.pow(playerRect.left - finishRect.left, 2) +
-            Math.pow(playerRect.top - finishRect.top, 2)
-          );
-
-          if (distance < 30) {
-            alert(`${this.name}이(가) 승리했습니다!`);
-            isRaceStarted = false;
-            clearInterval(raceInterval);
-          }
-        }
-      }
-    }
-
-    function addPlayer() {
-      if (!isRaceStarted) {
-        const playerName = playerNameInput.value;
-        if (playerName && !allPlayers.some(player => player.name === playerName)) {
-          const newPlayer = new Player(playerName);
-          allPlayers.push(newPlayer);
-          playerNameInput.value = '';
-        }
-      }
-    }
-
-    function handleEnterKey(event) {
-      if (event.key === 'Enter') {
-        addPlayer();
-      }
-    }
-
-    function startRace() {
-      isRaceStarted = true;
-      raceInterval = setInterval(() => {
-        allPlayers.forEach(player => {
-          player.move();
+          // Start the animation for each reel
+          reel.style.animationPlayState = 'running';
         });
-      }, 100);
+
+        isSpinning = true;
+      }
+    }
+
+function startAuto() {
+  // 랜덤한 시간(3~5초) 후에 stopSpin을 호출하는 함수
+  function stopAfterRandomTime(reel1) {
+    const randomTime = Math.random() * (6000 - 1000) + 5800; // 3000~5000ms 사이의 랜덤 시간
+    setTimeout(() => {
+      stopSpin(reel1);
+    }, randomTime);
+  }
+
+  // 오토 실행, 여기서는 랜덤하게 선택된 릴들을 사용
+  startSpin('reel1');
+
+  // 랜덤한 시간(3~5초) 후에 각각의 정지를 호출
+  stopAfterRandomTime('reel1');
+
+}
+
+    function stopSpin(reelId) {
+      if (isSpinning) {
+   //     spinSound.pause();
+        reels.forEach((reel, index) => {
+          // Pause the animation for the selected reel only
+          if (reel.id === reelId) {
+            reel.style.animationPlayState = 'paused';
+
+            // Get the current translation position
+            const computedStyle = window.getComputedStyle(reel);
+            const translateY = parseInt(computedStyle.transform.split(',')[5], 10);
+
+            // Find the closest 12 positions
+            let closestPosition = 0;
+            let closestDistance = Math.abs(translateY + 2119);
+
+            for (let i = 1; i <= 163; i++) {
+              const position = -163 * i;
+              const distance = Math.abs(translateY - position);
+              if (distance < closestDistance) {
+                closestPosition = position;
+                closestDistance = distance;
+              }
+            }
+
+            // Change to the image at the found position
+            const positionIndex = Math.abs(closestPosition / 163) + 1;
+
+            // Image loading successful
+            const newImage = new Image();
+            newImage.onload = function () {
+              // Remove animation properties
+              reel.style.animation = 'none';
+
+              // Adjust the position of the slot area and image
+              reel.style.overflow = 'block';
+
+              const reelContainer = reel.parentElement;
+              reelContainer.style.position = 'absolute';
+              reelContainer.style.bottom = '0';
+
+              // Add the image to the reel
+              reel.innerHTML = '';
+              reel.appendChild(newImage);
+
+            spinCount++;
+
+            if (spinCount === 1) {
+              isSpinning = false;
+              spinSound.pause();
+              startButton.disabled = false; // 모든 릴이 정지된 후에 시작 버튼 다시 활성화
+            }
+          };
+
+            newImage.onerror = function () {
+              // Image loading failed
+              console.error('이미지 로드에 실패했습니다.');
+            };
+
+            // Set the image source
+            newImage.src = images[positionIndex - 1];
+            newImage.alt = `${positionIndex}`;
+          }
+        });
+      }
     }
   </script>
 </body>
-
 </html>
