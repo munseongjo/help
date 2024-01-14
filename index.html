@@ -186,7 +186,7 @@ const audioFiles = [
 function startAuto() {
   // 랜덤한 시간(3~5초) 후에 stopSpin을 호출하는 함수
   function stopAfterRandomTime(reel1) {
-    const randomTime = Math.random() * (5000 - 1000) + 800; // 3000~5000ms 사이의 랜덤 시간
+    const randomTime = Math.random() * (5000 - 4500) + 500; // 3000~5000ms 사이의 랜덤 시간
     setTimeout(() => {
       stopSpin(reel1);
     }, randomTime);
