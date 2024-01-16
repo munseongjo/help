@@ -52,14 +52,17 @@
     }
 
     .reel-container {
-      height: 163px;
+      width: 294px;
+      height: 165px;
       overflow: hidden;
       position: absolute;
       bottom: 0;
     }
     .head {
       height: 300px;
-      height: 40px;
+      height: 60px;
+	  margin-top: 5px;
+      display: flex;
     }
 
     .reel {
@@ -104,8 +107,8 @@
   </style>
 </head>
 <body>
-<div class="head"><img src="head.png">  </div>
   <div class="slots-container">
+  <div class="head"><img src="head.png">  </div>
     <div class="slot" id="reel1">
       <div class="reel-container">
         <div class="reel" id="reel1">
@@ -119,7 +122,7 @@
  <!-- 시작 및 정지 버튼 및 효과음 추가 -->
 
 <div class="button-container">
-      <button class="auto-button" onclick="startAuto()('reel1')">자동</button>
+      <button class="auto-button" onclick="startAuto()('reel1')">START</button>
   </div>
    <div> <audio id="spinSound" src="spin_sound.mp3"></audio>
   </div>
